@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>六一快乐 - 属于我们的小世界</title>
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: linear-gradient(135deg, #FF6B9D 0%, #FFB3CC 50%, #FFC8DD 100%);
+      min-height: 100vh;
+    }
+
+    #tsparticles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+
+    .landing {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .subtitle {
+      font-family: var(--font-en);
+      color: rgba(255, 255, 255, 0.75);
+      font-size: 1.2rem;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeIn 1s ease 0.3s forwards;
+    }
+
+    .main-title {
+      font-family: var(--font-cn);
+      color: var(--white);
+      font-size: 3rem;
+      line-height: 1.4;
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: slideUp 1s ease 0.6s forwards;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .typed-wrapper {
+      height: 2.5rem;
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      animation: fadeIn 1s ease 1.2s forwards;
+    }
+
+    .typed-wrapper span {
+      font-family: var(--font-cn);
+      color: var(--white);
+      font-size: 1.3rem;
+    }
+
+    .typed-cursor {
+      color: var(--white);
+    }
+
+    .enter-btn {
+      display: inline-block;
+      padding: 1rem 2.5rem;
+      background: var(--white);
+      color: var(--primary);
+      font-family: var(--font-cn);
+      font-size: 1.2rem;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      text-decoration: none;
+      box-shadow: 0 4px 20px rgba(255, 107, 157, 0.3);
+      opacity: 0;
+      animation: slideUp 0.8s ease 3.5s forwards;
+      transition: all 0.3s ease;
+    }
+
+    .enter-btn:hover {
+      background: linear-gradient(135deg, var(--white), #FFE0EC);
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 8px 30px rgba(255, 107, 157, 0.5);
+    }
+
+    .enter-btn:active {
+      transform: translateY(0) scale(0.98);
+    }
+
+    .footer-text {
+      position: absolute;
+      bottom: 2rem;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.9rem;
+      font-family: var(--font-cn);
+      opacity: 0;
+      animation: fadeIn 1s ease 4s forwards;
+    }
+
+    body.fade-out {
+      animation: fadeOut 0.6s ease forwards;
+    }
+
+    @keyframes fadeOut {
+      to { opacity: 0; transform: scale(1.02); }
+    }
+
+    @media (max-width: 768px) {
+      .main-title { font-size: 2.2rem; }
+      .subtitle { font-size: 1rem; }
+      .typed-wrapper span { font-size: 1.1rem; }
+      .enter-btn { padding: 0.8rem 2rem; font-size: 1.1rem; }
+    }
+
+    @media (max-width: 480px) {
+      .main-title { font-size: 1.8rem; }
+      .typed-wrapper { height: 3rem; }
+      .typed-wrapper span { font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Particles Background -->
+  <div id="tsparticles"></div>
+
+  <!-- Main Content -->
+  <main class="landing">
+    <p class="subtitle">Happy Children's Day</p>
+
+    <h1 class="main-title">
+      欢迎来到<br>我们的小世界 ✨
+    </h1>
+
+    <div class="typed-wrapper">
+      <span id="typed-text"></span>
+    </div>
+
+    <a class="enter-btn" id="enterBtn">进入我们的回忆 →</a>
+
+    <p class="footer-text">送给 [她的名字] ❤</p>
+  </main>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/typed.js@2/dist/typed.umd.js"></script>
+  <script src="js/global.js"></script>
+  <script>
+    // tsParticles config
+    tsParticles.load("tsparticles", {
+      fullScreen: false,
+      particles: {
+        number: { value: 35, density: { enable: true, area: 800 } },
+        color: { value: ["#ffffff", "#FFB3CC", "#FFD6E8"] },
+        shape: {
+          type: ["heart", "star"],
+        },
+        opacity: {
+          value: { min: 0.3, max: 0.7 },
+          animation: { enable: true, speed: 0.5, minimumValue: 0.2 }
+        },
+        size: {
+          value: { min: 4, max: 10 },
+          animation: { enable: true, speed: 2, minimumValue: 3 }
+        },
+        move: {
+          enable: true,
+          speed: 0.8,
+          direction: "top",
+          outModes: { default: "out" },
+          straight: false,
+          random: true
+        }
+      },
+      detectRetina: true
+    });
+
+    // Typed.js init
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        new Typed('#typed-text', {
+          strings: [
+            "虽然你已经不是小朋友了…",
+            "但在我这里，你永远可以当小孩。",
+            "六一儿童节快乐，我的宝贝 ❤"
+          ],
+          typeSpeed: 60,
+          backSpeed: 30,
+          backDelay: 1500,
+          loop: false
+        });
+      }, 1500);
+
+      // Enter button click
+      document.getElementById('enterBtn').addEventListener('click', () => {
+        document.body.classList.add('fade-out');
+        setTimeout(() => {
+          window.location.href = 'memories.html';
+        }, 600);
+      });
+    });
+  </script>
+</body>
+</html>

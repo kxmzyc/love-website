@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>关于她 - 你在我心里的样子</title>
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2/dist/aos.css">
+  <style>
+    body { background: var(--bg-pink); overflow-x: hidden; }
+
+    .top-nav {
+      position: fixed; top: 0; left: 0; right: 0; height: 56px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 1.5rem;
+      background: rgba(255, 240, 245, 0.8);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 179, 204, 0.3); z-index: 1000;
+    }
+    .top-nav .logo { font-family: var(--font-cn); font-size: 1.2rem; color: var(--primary); }
+    .top-nav .back-link { font-family: var(--font-cn); color: var(--primary); text-decoration: none; font-size: 0.95rem; transition: opacity 0.3s; }
+    .top-nav .back-link:hover { opacity: 0.7; }
+
+    .page-content { padding: 5rem 1.5rem 6rem; max-width: 900px; margin: 0 auto; }
+
+    /* Section Title */
+    .section-title {
+      font-family: var(--font-cn); font-size: 2rem; color: var(--text-dark);
+      text-align: center; margin-bottom: 2rem;
+    }
+
+    /* ===== Section 1: Profile ===== */
+    .profile-section {
+      display: flex; align-items: center; gap: 2.5rem;
+      background: var(--white); border-radius: 20px;
+      padding: 2.5rem; box-shadow: 0 4px 20px rgba(255,107,157,0.08);
+      margin-bottom: 3.5rem;
+    }
+
+    .profile-avatar {
+      flex-shrink: 0; width: 140px; height: 140px;
+      border-radius: 50%; border: 4px solid var(--primary-light);
+      object-fit: cover; box-shadow: 0 4px 15px rgba(255,107,157,0.2);
+      background: linear-gradient(135deg, #FFF0F5, #FFE0EC);
+    }
+
+    .profile-tags { display: flex; flex-wrap: wrap; gap: 0.7rem; }
+<!-- CHUNK_A -->
+
+    .tag-item {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      background: rgba(255, 107, 157, 0.08); color: var(--text-dark);
+      padding: 0.5rem 1rem; border-radius: 20px;
+      font-family: var(--font-cn); font-size: 0.95rem;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .tag-item:hover {
+      transform: scale(1.05);
+      box-shadow: 0 3px 12px rgba(255,107,157,0.15);
+    }
+    .tag-item .tag-emoji { font-size: 1.1rem; }
+
+    /* ===== Section 2: Stats ===== */
+    .stats-section { margin-bottom: 3.5rem; }
+
+    .stats-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 1.2rem;
+    }
+
+    .stat-card {
+      background: var(--white); border-radius: 16px;
+      padding: 1.8rem 1rem; text-align: center;
+      box-shadow: 0 4px 20px rgba(255,107,157,0.08);
+      transition: transform 0.3s ease;
+    }
+    .stat-card:hover { transform: translateY(-4px); }
+
+    .stat-number {
+      font-family: var(--font-en); font-size: 2.5rem;
+      color: var(--primary); font-weight: bold;
+      margin-bottom: 0.3rem;
+    }
+    .stat-label {
+      font-family: var(--font-cn); font-size: 0.9rem; color: #888;
+    }
+
+    /* ===== Section 3: Notes ===== */
+    .notes-section { margin-bottom: 2rem; }
+
+    .notes-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+    }
+
+    .note-card {
+      padding: 1.3rem; border-radius: 4px;
+      font-family: var(--font-cn); font-size: 1rem;
+      line-height: 1.6; color: var(--text-dark);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      transition: transform 0.3s ease;
+      position: relative;
+    }
+    .note-card::before {
+      content: '📌'; position: absolute; top: -8px; left: 10px; font-size: 1rem;
+    }
+    .note-card:nth-child(1) { background: #FFF8DC; transform: rotate(-1.5deg); }
+    .note-card:nth-child(2) { background: #FFE4F0; transform: rotate(1deg); }
+    .note-card:nth-child(3) { background: #E8F4FD; transform: rotate(-0.8deg); }
+    .note-card:nth-child(4) { background: #E8FDE8; transform: rotate(1.5deg); }
+    .note-card:nth-child(5) { background: #FFF0E0; transform: rotate(-1deg); }
+    .note-card:nth-child(6) { background: #F0E8FD; transform: rotate(0.8deg); }
+    .note-card:hover { transform: rotate(0deg) scale(1.03) !important; }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 768px) {
+      .profile-section { flex-direction: column; text-align: center; padding: 2rem 1.5rem; }
+      .profile-avatar { width: 120px; height: 120px; }
+      .profile-tags { justify-content: center; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .notes-grid { grid-template-columns: repeat(2, 1fr); }
+      .section-title { font-size: 1.7rem; }
+    }
+
+    @media (max-width: 480px) {
+      .page-content { padding: 4.5rem 1rem 6rem; }
+      .stats-grid { grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+      .stat-number { font-size: 2rem; }
+      .notes-grid { grid-template-columns: 1fr; }
+      .section-title { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="top-nav">
+    <span class="logo">🌸 关于她</span>
+    <a href="index.html" class="back-link">← 返回首页</a>
+  </nav>
+
+  <main class="page-content">
+    <!-- Section 1: Profile -->
+    <section class="profile-section" data-aos="fade-up">
+      <img src="images/avatar.jpg" alt="她" class="profile-avatar"
+           onerror="this.style.background='linear-gradient(135deg,#FFB3CC,#FF6B9D)';this.src='';">
+      <div>
+        <h2 class="section-title" style="text-align:left;margin-bottom:1.2rem;">你在我心里的样子 🌸</h2>
+        <div class="profile-tags">
+          <span class="tag-item"><span class="tag-emoji">🧋</span> 最爱喝：[她最爱的饮料]</span>
+          <span class="tag-item"><span class="tag-emoji">😤</span> 生气时：[生气的样子]</span>
+          <span class="tag-item"><span class="tag-emoji">💬</span> 口头禅：[她常说的话]</span>
+          <span class="tag-item"><span class="tag-emoji">🎵</span> 常听的歌：[她喜欢的歌]</span>
+          <span class="tag-item"><span class="tag-emoji">🐱</span> 像：[某种动物]</span>
+          <span class="tag-item"><span class="tag-emoji">☀️</span> 在我眼里：世界上最可爱的人</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: Stats -->
+    <section class="stats-section">
+      <h2 class="section-title" data-aos="fade-up">我们的数字 💕</h2>
+      <div class="stats-grid">
+        <div class="stat-card" data-aos="zoom-in" data-aos-delay="0">
+          <div class="stat-number" id="statDays">0</div>
+          <div class="stat-label">已经认识的天数</div>
+        </div>
+        <div class="stat-card" data-aos="zoom-in" data-aos-delay="100">
+          <div class="stat-number" id="statPhotos">0</div>
+          <div class="stat-label">一起拍的照片</div>
+        </div>
+        <div class="stat-card" data-aos="zoom-in" data-aos-delay="200">
+          <div class="stat-number" id="statMessages">0</div>
+          <div class="stat-label">聊天消息数</div>
+        </div>
+        <div class="stat-card" data-aos="zoom-in" data-aos-delay="300">
+          <div class="stat-number">∞</div>
+          <div class="stat-label">爱你的天数</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Notes -->
+    <section class="notes-section">
+      <h2 class="section-title" data-aos="fade-up">我记得的</h2>
+      <div class="notes-grid">
+        <div class="note-card" data-aos="fade-up" data-aos-delay="0">你说过最想去某个地方</div>
+        <div class="note-card" data-aos="fade-up" data-aos-delay="80">你不喜欢吃香菜</div>
+        <div class="note-card" data-aos="fade-up" data-aos-delay="160">你生气的时候会鼓嘴</div>
+        <div class="note-card" data-aos="fade-up" data-aos-delay="240">你睡觉前一定要发消息说晚安</div>
+        <div class="note-card" data-aos="fade-up" data-aos-delay="320">你喜欢所有软软的东西</div>
+        <div class="note-card" data-aos="fade-up" data-aos-delay="400">你笑起来眼睛会弯成月牙</div>
+      </div>
+    </section>
+  </main>
+
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/aos@2/dist/aos.js"></script>
+  <script src="js/global.js"></script>
+  <script>
+    AOS.init({ duration: 700, easing: 'ease-out-cubic', once: true, offset: 60 });
+
+    // Count up animation
+    function animateCount(el, target, duration) {
+      const start = 0;
+      const startTime = performance.now();
+      function update(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const current = Math.floor(eased * target);
+        el.textContent = current.toLocaleString();
+        if (progress < 1) requestAnimationFrame(update);
+        else el.textContent = target.toLocaleString();
+      }
+      requestAnimationFrame(update);
+    }
+
+    // Calculate days since 2024-03-01
+    const startDate = new Date('2024-03-01');
+    const today = new Date();
+    const daysDiff = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
+
+    // Intersection Observer for stats
+    let statsAnimated = false;
+    const statsObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !statsAnimated) {
+          statsAnimated = true;
+          animateCount(document.getElementById('statDays'), daysDiff, 2000);
+          animateCount(document.getElementById('statPhotos'), 862, 2000);
+          animateCount(document.getElementById('statMessages'), 99999, 2500);
+        }
+      });
+    }, { threshold: 0.3 });
+
+    statsObserver.observe(document.querySelector('.stats-section'));
+  </script>
+</body>
+</html>

@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>我们的歌 - 音乐与互动</title>
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2/dist/aos.css">
+  <style>
+    body { background: var(--bg-pink); overflow-x: hidden; }
+
+    .top-nav {
+      position: fixed; top: 0; left: 0; right: 0; height: 56px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 1.5rem; background: rgba(255,240,245,0.8);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,179,204,0.3); z-index: 1000;
+    }
+    .top-nav .logo { font-family: var(--font-cn); font-size: 1.2rem; color: var(--primary); }
+    .top-nav .back-link { font-family: var(--font-cn); color: var(--primary); text-decoration: none; font-size: 0.95rem; }
+
+    .page-content { padding: 5rem 1.5rem 6rem; max-width: 700px; margin: 0 auto; }
+    .section-title { font-family: var(--font-cn); font-size: 2rem; color: var(--text-dark); text-align: center; margin-bottom: 1.5rem; }
+    .section-block { margin-bottom: 3.5rem; }
+
+    /* ===== Vinyl Player ===== */
+    .vinyl-player { display: flex; flex-direction: column; align-items: center; }
+
+    .vinyl-disc {
+      width: 220px; height: 220px; border-radius: 50%;
+      background: radial-gradient(circle, #555 0%, #222 30%, #333 32%, #111 60%, #222 62%, #1a1a1a 100%);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+      position: relative;
+    }
+    .vinyl-disc::before {
+      content: ''; position: absolute; inset: 10px; border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .vinyl-disc.spinning { animation: spin 4s linear infinite; }
+
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+    .vinyl-cover {
+      width: 80px; height: 80px; border-radius: 50%;
+      object-fit: cover; border: 3px solid #444;
+      background: linear-gradient(135deg, var(--primary-light), var(--primary));
+    }
+
+    .song-info { text-align: center; margin-top: 1.2rem; }
+    .song-name { font-family: var(--font-cn); font-size: 1.3rem; color: var(--text-dark); }
+    .song-artist { font-size: 0.9rem; color: #999; margin-top: 0.2rem; }
+
+    .player-controls { display: flex; flex-direction: column; align-items: center; gap: 1rem; margin-top: 1.5rem; width: 100%; max-width: 320px; }
+
+    .play-btn {
+      width: 56px; height: 56px; border-radius: 50%; border: none;
+      background: var(--primary); color: var(--white); font-size: 1.4rem;
+      cursor: pointer; box-shadow: 0 4px 15px rgba(255,107,157,0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .play-btn:hover { transform: scale(1.1); box-shadow: 0 6px 20px rgba(255,107,157,0.5); }
+
+    .progress-bar { width: 100%; display: flex; align-items: center; gap: 0.5rem; }
+    .progress-bar input[type="range"] { flex: 1; accent-color: var(--primary); height: 4px; cursor: pointer; }
+    .progress-time { font-size: 0.75rem; color: #999; min-width: 35px; }
+
+    .volume-bar { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: #999; }
+    .volume-bar input[type="range"] { width: 80px; accent-color: var(--primary); cursor: pointer; }
+
+    /* ===== Heart Click Area ===== */
+    .heart-area {
+      position: relative; width: 100%; height: 400px;
+      background: rgba(255,179,204,0.1); border-radius: 20px;
+      border: 2px dashed var(--primary-light); cursor: pointer;
+      overflow: hidden; display: flex; align-items: center; justify-content: center;
+    }
+    .heart-area-hint { font-family: var(--font-cn); font-size: 1.2rem; color: var(--primary-light); pointer-events: none; }
+    .heart-counter {
+      position: absolute; top: 1rem; right: 1rem;
+      font-family: var(--font-cn); font-size: 0.9rem;
+      color: var(--primary); background: var(--white);
+      padding: 0.3rem 0.8rem; border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(255,107,157,0.1);
+    }
+    .click-heart {
+      position: absolute; pointer-events: none;
+      animation: heartFloat 1.5s ease-out forwards;
+    }
+    @keyframes heartFloat {
+      0% { opacity: 1; transform: translateY(0) scale(1); }
+      100% { opacity: 0; transform: translateY(-120px) scale(0.5); }
+    }
+
+    /* ===== Question Section ===== */
+    .question-box {
+      text-align: center; background: var(--white); border-radius: 20px;
+      padding: 2.5rem 2rem; box-shadow: 0 4px 20px rgba(255,107,157,0.08);
+    }
+    .question-text { font-family: var(--font-cn); font-size: 1.8rem; color: var(--text-dark); margin-bottom: 2rem; }
+    .btn-group { display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; position: relative; }
+    .btn-yes {
+      padding: 0.9rem 2.5rem; border: none; border-radius: 30px;
+      background: #4CAF50; color: var(--white); font-family: var(--font-cn);
+      font-size: 1.2rem; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-yes:hover { transform: scale(1.05); box-shadow: 0 4px 15px rgba(76,175,80,0.4); }
+    .btn-no {
+      padding: 0.6rem 1.5rem; border: 1px solid #ccc; border-radius: 30px;
+      background: #f5f5f5; color: #999; font-family: var(--font-cn);
+      font-size: 0.9rem; cursor: pointer; transition: all 0.3s;
+      position: relative;
+    }
+    .question-result {
+      display: none; font-family: var(--font-cn); font-size: 1.5rem;
+      color: var(--primary); margin-top: 1.5rem; animation: fadeIn 0.5s ease;
+    }
+
+    /* ===== Firework Button ===== */
+    .firework-section { text-align: center; }
+    .firework-btn {
+      padding: 1rem 2.5rem; border: none; border-radius: 30px;
+      background: linear-gradient(135deg, var(--primary), #FF8C42);
+      color: var(--white); font-family: var(--font-cn); font-size: 1.2rem;
+      cursor: pointer; box-shadow: 0 4px 15px rgba(255,107,157,0.3);
+      transition: transform 0.2s;
+    }
+    .firework-btn:hover { transform: scale(1.05); }
+
+    #fireworkCanvas {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: 9998; display: none;
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 768px) {
+      .vinyl-disc { width: 180px; height: 180px; }
+      .vinyl-cover { width: 65px; height: 65px; }
+      .heart-area { height: 300px; }
+      .question-text { font-size: 1.5rem; }
+    }
+    @media (max-width: 480px) {
+      .page-content { padding: 4.5rem 1rem 6rem; }
+      .vinyl-disc { width: 160px; height: 160px; }
+      .vinyl-cover { width: 55px; height: 55px; }
+      .section-title { font-size: 1.6rem; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="fireworkCanvas"></canvas>
+
+  <nav class="top-nav">
+    <span class="logo">🎵 音乐与互动</span>
+    <a href="index.html" class="back-link">← 返回首页</a>
+  </nav>
+
+  <main class="page-content">
+    <!-- Section 1: Music Player -->
+    <section class="section-block" data-aos="fade-up">
+      <h2 class="section-title">我们的歌 🎵</h2>
+      <div class="vinyl-player">
+        <div class="vinyl-disc" id="vinylDisc">
+          <img src="images/cover.jpg" alt="cover" class="vinyl-cover"
+               onerror="this.style.background='linear-gradient(135deg,#FFB3CC,#FF6B9D)';this.src='';">
+        </div>
+        <div class="song-info">
+          <div class="song-name">你们喜欢的歌</div>
+          <div class="song-artist">歌手名</div>
+        </div>
+        <div class="player-controls">
+          <button class="play-btn" id="playBtn">▶</button>
+          <div class="progress-bar">
+            <span class="progress-time" id="currentTime">0:00</span>
+            <input type="range" id="progressRange" min="0" max="100" value="0">
+            <span class="progress-time" id="totalTime">0:00</span>
+          </div>
+          <div class="volume-bar">
+            <span>🔈</span>
+            <input type="range" id="volumeRange" min="0" max="100" value="80">
+          </div>
+        </div>
+      </div>
+      <audio id="audioPlayer" src="music/love.mp3" preload="auto"></audio>
+    </section>
+
+    <!-- Section 2: Heart Click -->
+    <section class="section-block" data-aos="fade-up">
+      <h2 class="section-title">点击屏幕 💕</h2>
+      <div class="heart-area" id="heartArea">
+        <span class="heart-area-hint">点击任意位置~</span>
+        <span class="heart-counter">已收集爱心：<span id="heartCount">0</span> 个</span>
+      </div>
+    </section>
+
+    <!-- Section 3: Question -->
+    <section class="section-block" data-aos="fade-up">
+      <h2 class="section-title">一个问题 😊</h2>
+      <div class="question-box">
+        <p class="question-text">你愿意一直陪着我吗？</p>
+        <div class="btn-group">
+          <button class="btn-yes" id="btnYes">愿意 ❤️</button>
+          <button class="btn-no" id="btnNo">不愿意</button>
+        </div>
+        <p class="question-result" id="questionResult"></p>
+      </div>
+    </section>
+
+    <!-- Section 4: Firework -->
+    <section class="section-block firework-section" data-aos="fade-up">
+      <button class="firework-btn" id="fireworkBtn">给你放烟花 🎆</button>
+    </section>
+  </main>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/aos@2/dist/aos.js"></script>
+  <script src="js/global.js"></script>
+  <script>
+    AOS.init({ duration: 700, once: true, offset: 60 });
+
+    // ===== Music Player =====
+    const audio = document.getElementById('audioPlayer');
+    const playBtn = document.getElementById('playBtn');
+    const vinylDisc = document.getElementById('vinylDisc');
+    const progressRange = document.getElementById('progressRange');
+    const volumeRange = document.getElementById('volumeRange');
+    const currentTimeEl = document.getElementById('currentTime');
+    const totalTimeEl = document.getElementById('totalTime');
+    let isPlaying = false;
+
+    function togglePlay() {
+      if (isPlaying) {
+        audio.pause();
+        playBtn.textContent = '▶';
+        vinylDisc.classList.remove('spinning');
+      } else {
+        audio.play().catch(() => {});
+        playBtn.textContent = '⏸';
+        vinylDisc.classList.add('spinning');
+      }
+      isPlaying = !isPlaying;
+    }
+
+    function formatTime(s) {
+      const m = Math.floor(s / 60);
+      const sec = Math.floor(s % 60);
+      return m + ':' + (sec < 10 ? '0' : '') + sec;
+    }
+
+    playBtn.addEventListener('click', togglePlay);
+
+    audio.addEventListener('timeupdate', () => {
+      if (audio.duration) {
+        progressRange.value = (audio.currentTime / audio.duration) * 100;
+        currentTimeEl.textContent = formatTime(audio.currentTime);
+      }
+    });
+
+    audio.addEventListener('loadedmetadata', () => {
+      totalTimeEl.textContent = formatTime(audio.duration);
+    });
+
+    audio.addEventListener('ended', () => {
+      isPlaying = false;
+      playBtn.textContent = '▶';
+      vinylDisc.classList.remove('spinning');
+    });
+
+    progressRange.addEventListener('input', () => {
+      if (audio.duration) audio.currentTime = (progressRange.value / 100) * audio.duration;
+    });
+
+    volumeRange.addEventListener('input', () => {
+      audio.volume = volumeRange.value / 100;
+    });
+    audio.volume = 0.8;
+
+    // ===== Heart Click =====
+    let heartCount = 0;
+    const heartArea = document.getElementById('heartArea');
+    const heartCountEl = document.getElementById('heartCount');
+    const heartColors = ['#FF6B9D', '#FF4081', '#E91E63', '#F06292', '#FF1744'];
+
+    heartArea.addEventListener('click', (e) => {
+      const rect = heartArea.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const heart = document.createElement('span');
+      heart.classList.add('click-heart');
+      heart.textContent = '❤';
+      heart.style.left = x + 'px';
+      heart.style.top = y + 'px';
+      heart.style.fontSize = (Math.random() * 20 + 20) + 'px';
+      heart.style.color = heartColors[Math.floor(Math.random() * heartColors.length)];
+      heartArea.appendChild(heart);
+      heartCount++;
+      heartCountEl.textContent = heartCount;
+      setTimeout(() => heart.remove(), 1500);
+    });
+
+    // ===== Question =====
+    const btnNo = document.getElementById('btnNo');
+    const btnYes = document.getElementById('btnYes');
+    const questionResult = document.getElementById('questionResult');
+
+    function runAway() {
+      const parent = btnNo.closest('.question-box');
+      const rect = parent.getBoundingClientRect();
+      const maxX = rect.width - btnNo.offsetWidth - 20;
+      const maxY = rect.height - btnNo.offsetHeight - 20;
+      const x = Math.random() * maxX;
+      const y = Math.random() * maxY;
+      btnNo.style.position = 'absolute';
+      btnNo.style.left = x + 'px';
+      btnNo.style.top = y + 'px';
+      btnNo.style.transition = 'all 0.3s ease';
+    }
+
+    btnNo.addEventListener('mouseenter', runAway);
+    btnNo.addEventListener('touchstart', (e) => { e.preventDefault(); runAway(); });
+
+    btnNo.addEventListener('click', () => {
+      questionResult.textContent = '哼，不许不愿意！😤';
+      questionResult.style.display = 'block';
+      setTimeout(() => runAway(), 300);
+    });
+
+    btnYes.addEventListener('click', () => {
+      questionResult.textContent = '我也是，永远爱你 ❤';
+      questionResult.style.display = 'block';
+      document.querySelector('.btn-group').style.display = 'none';
+      launchFireworks();
+    });
+
+    // ===== Fireworks =====
+    const canvas = document.getElementById('fireworkCanvas');
+    const ctx = canvas.getContext('2d');
+    let fireworksRunning = false;
+    let particles = [];
+    let rockets = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class Particle {
+      constructor(x, y, color) {
+        this.x = x; this.y = y;
+        this.color = color;
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 5 + 2;
+        this.vx = Math.cos(angle) * speed;
+        this.vy = Math.sin(angle) * speed;
+        this.alpha = 1;
+        this.decay = Math.random() * 0.02 + 0.015;
+        this.size = Math.random() * 3 + 1;
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.vy += 0.05;
+        this.alpha -= this.decay;
+      }
+      draw() {
+        ctx.save();
+        ctx.globalAlpha = this.alpha;
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    class Rocket {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = canvas.height;
+        this.vy = -(Math.random() * 4 + 6);
+        this.targetY = Math.random() * canvas.height * 0.4 + 50;
+        this.color = ['#FF6B9D','#FFD700','#fff','#87CEEB','#FF69B4','#FFA500'][Math.floor(Math.random()*6)];
+        this.exploded = false;
+      }
+      update() {
+        this.y += this.vy;
+        if (this.y <= this.targetY && !this.exploded) {
+          this.exploded = true;
+          for (let i = 0; i < 60; i++) {
+            particles.push(new Particle(this.x, this.y, this.color));
+          }
+        }
+      }
+      draw() {
+        if (this.exploded) return;
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    let fireworkTimer = null;
+    function launchFireworks() {
+      canvas.style.display = 'block';
+      fireworksRunning = true;
+      particles = [];
+      rockets = [];
+
+      const spawnInterval = setInterval(() => {
+        rockets.push(new Rocket());
+      }, 300);
+
+      fireworkTimer = setTimeout(() => {
+        clearInterval(spawnInterval);
+        setTimeout(() => {
+          fireworksRunning = false;
+          canvas.style.display = 'none';
+        }, 2000);
+      }, 5000);
+
+      animateFireworks();
+    }
+
+    function animateFireworks() {
+      if (!fireworksRunning && particles.length === 0) return;
+      ctx.fillStyle = 'rgba(0,0,0,0.1)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      rockets = rockets.filter(r => !r.exploded);
+      rockets.forEach(r => { r.update(); r.draw(); });
+
+      particles = particles.filter(p => p.alpha > 0);
+      particles.forEach(p => { p.update(); p.draw(); });
+
+      if (fireworksRunning || particles.length > 0) {
+        requestAnimationFrame(animateFireworks);
+      } else {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    }
+
+    document.getElementById('fireworkBtn').addEventListener('click', launchFireworks);
+  </script>
+</body>
+</html>

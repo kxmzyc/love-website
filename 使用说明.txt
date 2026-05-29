@@ -1,0 +1,100 @@
+========================================
+  六一儿童节情侣纪念网站 - 使用说明
+========================================
+
+这是一个送给她的专属网站，以下是修改和上传的方法。
+
+
+【一、如何替换照片】
+
+1. 准备好你的照片（JPG格式最佳）
+2. 用 squoosh.app 网站压缩照片（每张不超过500KB）
+3. 将照片复制到 images 文件夹中
+4. 按以下规则重命名：
+
+   头像照片 → avatar.jpg（正方形，她的照片）
+   音乐封面 → cover.jpg（正方形）
+   时间轴照片 → 1.jpg, 2.jpg, 3.jpg, 4.jpg, 5.jpg
+   相册照片 → photo1.jpg, photo2.jpg ... photo12.jpg
+
+5. 音乐文件放到 music 文件夹，命名为 love.mp3
+
+
+【二、如何修改文字】
+
+用"记事本"或"VS Code"打开对应的 .html 文件：
+
+■ 修改首页她的名字：
+  打开 index.html → 找到 [她的名字] → 替换成真实名字
+
+■ 修改时间轴内容：
+  打开 memories.html → 找到日期和文字描述 → 直接修改
+
+■ 修改"关于她"的标签：
+  打开 about.html → 找到 [她最爱的饮料] 等占位文字 → 替换
+
+■ 修改便利贴内容：
+  打开 about.html → 找到"你说过最想去某个地方"等文字 → 替换
+
+■ 修改相册描述：
+  打开 gallery.html → 找到 caption 里的文字 → 替换
+
+■ 修改结尾告白：
+  打开 ending.html → 找到告白文字 → 替换
+  找到 [你的名字] → 替换成你的名字
+
+■ 修改认识天数起始日期：
+  打开 about.html → 找到 2024-03-01 → 改成你们认识的日期
+
+提示：用 Ctrl+F 搜索关键词可以快速定位！
+
+
+【三、如何上传到 GitHub】
+
+第一次上传：
+
+1. 注册 GitHub 账号：https://github.com
+2. 安装 Git：https://git-scm.com/downloads
+3. 在 GitHub 网站上点击"New repository"，名字填 love-website
+4. 打开命令行（终端/CMD），进入网站文件夹，依次输入：
+
+   git init
+   git add .
+   git commit -m "first commit"
+   git branch -M main
+   git remote add origin https://github.com/你的用户名/love-website.git
+   git push -u origin main
+
+5. 在 GitHub 仓库页面：Settings → Pages → Branch 选 main → Save
+6. 等待1-2分钟即可访问
+
+以后修改了内容，只需要：
+
+   git add .
+   git commit -m "update"
+   git push
+
+
+【四、网站访问地址】
+
+上传成功后，网站地址为：
+
+   https://你的用户名.github.io/love-website/
+
+例如你的 GitHub 用户名是 zhangsan，那地址就是：
+   https://zhangsan.github.io/love-website/
+
+把这个链接发给她就可以了！
+
+
+【五、注意事项】
+
+- 照片越大，网站加载越慢，一定要压缩
+- 音乐文件建议不超过 5MB
+- 修改文字时不要删除 HTML 标签（< > 包裹的部分）
+- 如果网站显示异常，检查是否误删了代码
+- GitHub Pages 更新有1-2分钟延迟，刷新页面即可
+
+========================================
+  祝你们六一快乐！
+========================================

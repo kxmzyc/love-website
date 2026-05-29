@@ -1,0 +1,48 @@
+/* ========== Page-specific Styles ========== */
+
+/* index.html - Landing Page */
+.landing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  text-align: center;
+}
+
+/* memories.html - Timeline */
+.timeline-page {
+  padding: 2rem;
+  padding-bottom: calc(var(--nav-height) + 2rem);
+}
+
+/* gallery.html - Photo Gallery */
+.gallery-page {
+  padding: 2rem;
+  padding-bottom: calc(var(--nav-height) + 2rem);
+}
+
+/* about.html - About Her */
+.about-page {
+  padding: 2rem;
+  padding-bottom: calc(var(--nav-height) + 2rem);
+}
+
+/* music.html - Music Player */
+.music-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+/* ending.html - Love Letter */
+.ending-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  text-align: center;
+}
