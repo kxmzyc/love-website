@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -249,8 +250,65 @@
         height: 140px;
       }
     }
+
+    /* Mini Lightbox */
+    .timeline-card .card-img {
+      cursor: pointer;
+    }
+
+    .mini-lightbox {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.9);
+      z-index: 9999;
+      max-width: 420px;
+      width: 90%;
+      background: var(--white);
+      border-radius: 12px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+      overflow: hidden;
+      opacity: 0;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .mini-lightbox.active {
+      display: block;
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    .mini-lightbox img {
+      width: 100%;
+      max-height: 320px;
+      object-fit: contain;
+      background: #f9f0f3;
+      display: block;
+    }
+
+    .mini-lightbox .lb-caption {
+      padding: 0.8rem 1rem;
+      font-family: var(--font-cn);
+      font-size: 1rem;
+      color: var(--text-dark);
+      text-align: center;
+    }
+
+    .mini-lightbox-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 9998;
+    }
+
+    .mini-lightbox-overlay.active {
+      display: block;
+    }
   </style>
 </head>
+
 <body>
   <!-- Top Navigation -->
   <nav class="top-nav">
@@ -261,7 +319,7 @@
   <!-- Wave Decoration -->
   <div class="wave-top">
     <svg viewBox="0 0 1440 80" preserveAspectRatio="none">
-      <path fill="#FFB3CC" fill-opacity="0.3" d="M0,40 C360,80 720,0 1080,40 C1260,60 1380,50 1440,40 L1440,0 L0,0 Z"/>
+      <path fill="#FFB3CC" fill-opacity="0.3" d="M0,40 C360,80 720,0 1080,40 C1260,60 1380,50 1440,40 L1440,0 L0,0 Z" />
     </svg>
   </div>
 
@@ -274,81 +332,253 @@
   <!-- Timeline -->
   <section class="timeline">
     <!-- Node 1 -->
-    <div class="timeline-item" data-aos="fade-right" data-aos-delay="0">
+    <div class="timeline-item" data-aos="fade-right">
       <div class="timeline-dot" data-aos="zoom-in" data-aos-delay="100"></div>
-      <span class="timeline-date">2024.03.01</span>
+      <span class="timeline-date">2025.04.26</span>
       <div class="timeline-card">
-        <img src="images/1.jpg" alt="初次相遇" class="card-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <img src="images1.jpg" alt="初次相遇" class="card-img"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
         <div class="card-img-placeholder" style="display:none;">💗</div>
         <div class="card-body">
           <h3 class="card-title">初次相遇</h3>
-          <p class="card-text">那是一个普通的下午，我们就这样认识了。</p>
-          <span class="card-tag">📍 某个地方</span>
+          <p class="card-text">那是一个普通的早上，我们就这样相遇了。</p>
+          <span class="card-tag">📍 屏山路口</span>
         </div>
       </div>
     </div>
 
     <!-- Node 2 -->
-    <div class="timeline-item" data-aos="fade-left" data-aos-delay="100">
-      <div class="timeline-dot" data-aos="zoom-in" data-aos-delay="200"></div>
-      <span class="timeline-date">2024.04.16</span>
+    <div class="timeline-item" data-aos="fade-left">
+      <div class="timeline-dot" data-aos="zoom-in" data-aos-delay="100"></div>
+      <span class="timeline-date">2025.05.10</span>
       <div class="timeline-card">
-        <img src="images/2.jpg" alt="第一次一起吃饭" class="card-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <img src="images2.jpg" alt="第一次一起吃东西" class="card-img"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
         <div class="card-img-placeholder" style="display:none;">💗</div>
         <div class="card-body">
-          <h3 class="card-title">第一次一起吃饭</h3>
-          <p class="card-text">你点了你最喜欢的那道菜，我记得你吃得很开心。</p>
-          <span class="card-tag">🍜 某家餐厅</span>
+          <h3 class="card-title">第一次一起吃东西</h3>
+          <p class="card-text">带宝宝去吃了冰</p>
+          <span class="card-tag">🍜 小赤豆</span>
         </div>
       </div>
     </div>
 
     <!-- Node 3 -->
-    <div class="timeline-item" data-aos="fade-right" data-aos-delay="200">
-      <div class="timeline-dot" data-aos="zoom-in" data-aos-delay="300"></div>
-      <span class="timeline-date">2024.06.20</span>
+    <div class="timeline-item" data-aos="fade-right">
+      <div class="timeline-dot" data-aos="zoom-in" data-aos-delay="100"></div>
+      <span class="timeline-date">2025.05.11</span>
       <div class="timeline-card">
-        <img src="images/3.jpg" alt="第一次牵手" class="card-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <img src="images3.jpg" alt="第一次牵手" class="card-img"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
         <div class="card-img-placeholder" style="display:none;">💗</div>
         <div class="card-body">
           <h3 class="card-title">第一次牵手</h3>
-          <p class="card-text">那天傍晚，我鼓起勇气，悄悄握住了你的手。</p>
-          <span class="card-tag">🌅</span>
+          <p class="card-text">那天傍晚，我鼓起勇气，握住了宝宝的手。</p>
+          <span class="card-tag">🌅 朱子学院后山</span>
         </div>
       </div>
     </div>
 
     <!-- Node 4 -->
-    <div class="timeline-item" data-aos="fade-left" data-aos-delay="300">
-      <div class="timeline-dot" data-aos="zoom-in" data-aos-delay="400"></div>
-      <span class="timeline-date">2024.08.01</span>
+    <div class="timeline-item" data-aos="fade-left">
+      <div class="timeline-dot" data-aos="zoom-in" data-aos-delay="100"></div>
+      <span class="timeline-date">2025.05.13</span>
       <div class="timeline-card">
-        <img src="images/4.jpg" alt="一起出去玩" class="card-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <img src="images4.jpg" alt="第一次比爱心" class="card-img"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
         <div class="card-img-placeholder" style="display:none;">💗</div>
         <div class="card-body">
-          <h3 class="card-title">一起出去玩</h3>
-          <p class="card-text">这是我们第一次一起出远门，每个瞬间都很珍贵。</p>
-          <span class="card-tag">✈️</span>
+          <h3 class="card-title">第一次和宝宝比爱心</h3>
+          <p class="card-text">第一次和宝宝比爱心，心跳加速的感觉。</p>
+          <span class="card-tag">🤟 捌拾叁號冰舍</span>
         </div>
       </div>
     </div>
 
     <!-- Node 5 -->
-    <div class="timeline-item" data-aos="fade-right" data-aos-delay="400">
-      <div class="timeline-dot" data-aos="zoom-in" data-aos-delay="500"></div>
-      <span class="timeline-date">2025.06.01</span>
+    <div class="timeline-item" data-aos="fade-right">
+      <div class="timeline-dot" data-aos="zoom-in" data-aos-delay="100"></div>
+      <span class="timeline-date">2025.05.16</span>
       <div class="timeline-card">
-        <img src="images/5.jpg" alt="第一次一起过六一" class="card-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <img src="images5.jpg" alt="宝宝生日" class="card-img"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
         <div class="card-img-placeholder" style="display:none;">💗</div>
         <div class="card-body">
-          <h3 class="card-title">第一次一起过六一儿童节</h3>
-          <p class="card-text">所以做了这个网站送给你，希望你喜欢。</p>
-          <span class="card-tag">🎁</span>
+          <h3 class="card-title">宝宝生日</h3>
+          <p class="card-text">宝宝生日那天，给我吃了HelloKitty蛋糕，甜到心里。</p>
+          <span class="card-tag">🎂 仁智23</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Node 6 -->
+    <div class="timeline-item" data-aos="fade-left">
+      <div class="timeline-dot" data-aos="zoom-in" data-aos-delay="100"></div>
+      <span class="timeline-date">2025.05.18</span>
+      <div class="timeline-card">
+        <img src="images6.jpg" alt="在一起" class="card-img"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="card-img-placeholder" style="display:none;">💗</div>
+        <div class="card-body">
+          <h3 class="card-title">在一起啦</h3>
+          <p class="card-text">这一天，我们正式在一起了。</p>
+          <span class="card-tag">💑三姑木槿</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Node 7 -->
+    <div class="timeline-item" data-aos="fade-right">
+      <div class="timeline-dot" data-aos="zoom-in" data-aos-delay="100"></div>
+      <span class="timeline-date">2025.05.30</span>
+      <div class="timeline-card">
+        <img src="images7.jpg" alt="第一次出去玩" class="card-img"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="card-img-placeholder" style="display:none;">💗</div>
+        <div class="card-body">
+          <h3 class="card-title">第一次出去玩</h3>
+          <p class="card-text">我们第一次出去玩，坐了好久的车车。</p>
+          <span class="card-tag">🎡鹰潭</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Node 8 -->
+    <div class="timeline-item" data-aos="fade-left">
+      <div class="timeline-dot" data-aos="zoom-in" data-aos-delay="100"></div>
+      <span class="timeline-date">2025.06.01</span>
+      <div class="timeline-card">
+        <img src="images8.jpg" alt="六一" class="card-img"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="card-img-placeholder" style="display:none;">💗</div>
+        <div class="card-body">
+          <h3 class="card-title">第一次啪啪</h3>
+          <p class="card-text">这顿海底捞吃完的晚上就...</p>
+          <span class="card-tag">🔒鹰潭</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Node 9 -->
+    <div class="timeline-item" data-aos="fade-right">
+      <div class="timeline-dot" data-aos="zoom-in" data-aos-delay="100"></div>
+      <span class="timeline-date">2025.07.05</span>
+      <div class="timeline-card">
+        <img src="images9.jpg" alt="第一次去宝宝县里" class="card-img"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="card-img-placeholder" style="display:none;">💗</div>
+        <div class="card-body">
+          <h3 class="card-title">第一次去宝宝县里见宝宝</h3>
+          <p class="card-text">第一次去你的县里找宝宝，来回七八个小时</p>
+          <span class="card-tag">🚗平和小溪</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Node 10 -->
+    <div class="timeline-item" data-aos="fade-left">
+      <div class="timeline-dot" data-aos="zoom-in" data-aos-delay="100"></div>
+      <span class="timeline-date">2025.08.31</span>
+      <div class="timeline-card">
+        <img src="images10.jpg" alt="一百天" class="card-img"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="card-img-placeholder" style="display:none;">💗</div>
+        <div class="card-body">
+          <h3 class="card-title">一百天</h3>
+          <p class="card-text">在一起一百天了，每一天都是幸福。</p>
+          <span class="card-tag">💯市区木槿</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Node 11 -->
+    <div class="timeline-item" data-aos="fade-right">
+      <div class="timeline-dot" data-aos="zoom-in" data-aos-delay="100"></div>
+      <span class="timeline-date">2025.10.01</span>
+      <div class="timeline-card">
+        <img src="images11.jpg" alt="第二次去旅行" class="card-img"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="card-img-placeholder" style="display:none;">💗</div>
+        <div class="card-body">
+          <h3 class="card-title">第二次去旅行</h3>
+          <p class="card-text">国庆我们去了好多地方</p>
+          <span class="card-tag">✈️义乌金华上饶</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Node 12 -->
+    <div class="timeline-item" data-aos="fade-left">
+      <div class="timeline-dot" data-aos="zoom-in" data-aos-delay="100"></div>
+      <span class="timeline-date">2025.12.03</span>
+      <div class="timeline-card">
+        <img src="images12.jpg" alt="两百天" class="card-img"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="card-img-placeholder" style="display:none;">💗</div>
+        <div class="card-body">
+          <h3 class="card-title">两百天</h3>
+          <p class="card-text">两百天，爱你的心只增不减。</p>
+          <span class="card-tag">💕市区木槿</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Node 13 -->
+    <div class="timeline-item" data-aos="fade-right">
+      <div class="timeline-dot" data-aos="zoom-in" data-aos-delay="100"></div>
+      <span class="timeline-date">2026.03.14</span>
+      <div class="timeline-card">
+        <img src="images13.jpg" alt="三百天" class="card-img"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="card-img-placeholder" style="display:none;">💗</div>
+        <div class="card-body">
+          <h3 class="card-title">三百天</h3>
+          <p class="card-text">三百天，我每一天都更爱宝宝宝宝</p>
+          <span class="card-tag">🤍小町烤肉</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Node 14 -->
+    <div class="timeline-item" data-aos="fade-left">
+      <div class="timeline-dot" data-aos="zoom-in" data-aos-delay="100"></div>
+      <span class="timeline-date">2026.05.16</span>
+      <div class="timeline-card">
+        <img src="images14.jpg" alt="宝宝生日" class="card-img"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="card-img-placeholder" style="display:none;">💗</div>
+        <div class="card-body">
+          <h3 class="card-title">宝宝生日</h3>
+          <p class="card-text">宝宝又长大一岁啦，生日快乐！</p>
+          <span class="card-tag">🎂三姑木槿</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Node 15 -->
+    <div class="timeline-item" data-aos="fade-right">
+      <div class="timeline-dot" data-aos="zoom-in" data-aos-delay="100"></div>
+      <span class="timeline-date">2026.05.18</span>
+      <div class="timeline-card">
+        <img src="images15.jpg" alt="一周年" class="card-img"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="card-img-placeholder" style="display:none;">💗</div>
+        <div class="card-body">
+          <h3 class="card-title">一周年</h3>
+          <p class="card-text">一周年快乐！感谢宝宝陪我走过这365天。</p>
+          <span class="card-tag">💍空境山房</span>
         </div>
       </div>
     </div>
   </section>
 
+
+  <!-- Mini Lightbox -->
+  <div class="mini-lightbox-overlay" id="mlOverlay"></div>
+  <div class="mini-lightbox" id="mlBox">
+    <img id="mlImg" src="" alt="">
+    <div class="lb-caption" id="mlCaption"></div>
+  </div>
 
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/aos@2/dist/aos.js"></script>
@@ -360,6 +590,31 @@
       once: true,
       offset: 80
     });
+
+    // Mini lightbox for timeline images
+    const mlBox = document.getElementById('mlBox');
+    const mlOverlay = document.getElementById('mlOverlay');
+    const mlImg = document.getElementById('mlImg');
+    const mlCaption = document.getElementById('mlCaption');
+
+    document.querySelectorAll('.timeline-card .card-img').forEach(img => {
+      img.addEventListener('click', () => {
+        if (!img.src || img.style.display === 'none') return;
+        mlImg.src = img.src;
+        mlCaption.textContent = img.alt || '';
+        mlOverlay.classList.add('active');
+        setTimeout(() => mlBox.classList.add('active'), 10);
+      });
+    });
+
+    function closeMl() {
+      mlBox.classList.remove('active');
+      mlOverlay.classList.remove('active');
+    }
+    mlOverlay.addEventListener('click', closeMl);
+    mlBox.addEventListener('click', closeMl);
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMl(); });
   </script>
 </body>
+
 </html>
