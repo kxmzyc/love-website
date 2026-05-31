@@ -7,7 +7,8 @@
       "Bash(echo -n '__TRACKED_VAR__: ')",
       "Bash(test -f G:/claudeproject/love-website/__TRACKED_VAR__)",
       "Bash(git add *)",
-      "Bash(git commit *)"
+      "Bash(git commit *)",
+      "Bash(git restore *)"
     ]
   }
 }

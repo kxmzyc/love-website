@@ -466,25 +466,56 @@
     const currentTimeEl = document.getElementById('currentTime');
     const totalTimeEl = document.getElementById('totalTime');
     let isPlaying = false;
-
-    function togglePlay() {
-      if (isPlaying) {
-        audio.pause();
-        playBtn.textContent = '▶';
-        vinylDisc.classList.remove('spinning');
-      } else {
-        audio.play().catch(() => { });
-        playBtn.textContent = '⏸';
-        vinylDisc.classList.add('spinning');
-      }
-      isPlaying = !isPlaying;
-    }
+    let timeTracker = null;
 
     function formatTime(s) {
       const m = Math.floor(s / 60);
       const sec = Math.floor(s % 60);
       return m + ':' + (sec < 10 ? '0' : '') + sec;
     }
+
+    function setPlaying(state) {
+      isPlaying = state;
+      localStorage.setItem('musicPlaying', state);
+      playBtn.textContent = state ? '⏸' : '▶';
+      if (state) {
+        vinylDisc.classList.add('spinning');
+        if (!timeTracker) {
+          timeTracker = setInterval(() => {
+            localStorage.setItem('musicTime', audio.currentTime.toFixed(2));
+          }, 1000);
+        }
+      } else {
+        vinylDisc.classList.remove('spinning');
+        clearInterval(timeTracker);
+        timeTracker = null;
+        localStorage.setItem('musicTime', audio.currentTime.toFixed(2));
+      }
+    }
+
+    function togglePlay() {
+      if (isPlaying) {
+        audio.pause();
+        setPlaying(false);
+      } else {
+        audio.play().catch(() => {});
+        setPlaying(true);
+      }
+    }
+
+    // Sync with global state from localStorage
+    const savedTime = parseFloat(localStorage.getItem('musicTime') || '0');
+    const wasPlaying = localStorage.getItem('musicPlaying') === 'true';
+    audio.volume = volumeRange.value / 100;
+
+    audio.addEventListener('canplay', () => {
+      if (savedTime > 0 && audio.duration && savedTime < audio.duration) {
+        audio.currentTime = savedTime;
+      }
+      if (wasPlaying) {
+        audio.play().then(() => setPlaying(true)).catch(() => {});
+      }
+    }, { once: true });
 
     playBtn.addEventListener('click', togglePlay);
 
@@ -500,19 +531,25 @@
     });
 
     audio.addEventListener('ended', () => {
-      isPlaying = false;
-      playBtn.textContent = '▶';
-      vinylDisc.classList.remove('spinning');
+      // loop manually to keep localStorage in sync
+      audio.currentTime = 0;
+      audio.play().catch(() => {});
     });
 
     progressRange.addEventListener('input', () => {
-      if (audio.duration) audio.currentTime = (progressRange.value / 100) * audio.duration;
+      if (audio.duration) {
+        audio.currentTime = (progressRange.value / 100) * audio.duration;
+        localStorage.setItem('musicTime', audio.currentTime.toFixed(2));
+      }
     });
 
     volumeRange.addEventListener('input', () => {
       audio.volume = volumeRange.value / 100;
     });
-    audio.volume = 0.8;
+
+    window.addEventListener('pagehide', () => {
+      localStorage.setItem('musicTime', audio.currentTime.toFixed(2));
+    });
 
     // ===== Heart Click =====
     let heartCount = 0;

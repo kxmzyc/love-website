@@ -10,11 +10,12 @@
     audio.volume = 0.4;
 
     const isPlaying = localStorage.getItem('musicPlaying') === 'true';
+    const savedTime = parseFloat(localStorage.getItem('musicTime') || '0');
 
     const btn = document.createElement('button');
     btn.id = 'globalMusicBtn';
     btn.setAttribute('aria-label', 'Toggle music');
-    btn.textContent = isPlaying ? '♪' : '♪';
+    btn.textContent = '♪';
     btn.style.cssText = `
       position: fixed; bottom: 5rem; right: 1.2rem; z-index: 999;
       width: 42px; height: 42px; border-radius: 50%; border: none;
@@ -27,13 +28,39 @@
     document.body.appendChild(btn);
 
     let playing = false;
+    let timeTracker = null;
+
+    function startTracking() {
+      if (timeTracker) return;
+      timeTracker = setInterval(() => {
+        localStorage.setItem('musicTime', audio.currentTime.toFixed(2));
+      }, 1000);
+    }
+
+    function stopTracking() {
+      clearInterval(timeTracker);
+      timeTracker = null;
+    }
 
     function setPlaying(state) {
       playing = state;
       localStorage.setItem('musicPlaying', state);
       btn.style.animation = state ? 'spin 2s linear infinite' : 'none';
       btn.style.opacity = state ? '1' : '0.6';
+      if (state) {
+        startTracking();
+      } else {
+        stopTracking();
+        localStorage.setItem('musicTime', audio.currentTime.toFixed(2));
+      }
     }
+
+    // Resume from saved position before playing
+    audio.addEventListener('canplay', () => {
+      if (savedTime > 0 && audio.duration && savedTime < audio.duration) {
+        audio.currentTime = savedTime;
+      }
+    }, { once: true });
 
     if (isPlaying) {
       audio.play().then(() => setPlaying(true)).catch(() => setPlaying(false));
@@ -47,12 +74,17 @@
         audio.play().then(() => setPlaying(true)).catch(() => {});
       }
     });
+
+    // Save time on page unload so the next page can resume
+    window.addEventListener('pagehide', () => {
+      localStorage.setItem('musicTime', audio.currentTime.toFixed(2));
+    });
   }
 
   // ===== 2. Page Transition =====
   function initPageTransition() {
     document.body.style.opacity = '0';
-    document.body.style.transition = 'opacity 0.6s ease';
+    document.body.style.transition = 'opacity 0.4s ease';
     requestAnimationFrame(() => {
       document.body.style.opacity = '1';
     });
@@ -65,9 +97,10 @@
 
       e.preventDefault();
       document.body.style.opacity = '0';
+      document.body.style.transition = 'opacity 0.15s ease';
       setTimeout(() => {
         window.location.href = href;
-      }, 400);
+      }, 150);
     });
   }
 
