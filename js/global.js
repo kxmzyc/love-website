@@ -1,4 +1,4 @@
-(function() {
+(function () {
   'use strict';
 
   // ===== 1. Global Background Music =====
@@ -6,11 +6,20 @@
     if (window.location.pathname.includes('music.html')) return;
 
     const audio = new Audio('music/love.mp3');
+    audio.preload = 'auto';
     audio.loop = true;
     audio.volume = 0.4;
 
-    const isPlaying = localStorage.getItem('musicPlaying') === 'true';
-    const savedTime = parseFloat(localStorage.getItem('musicTime') || '0');
+    // sessionStorage clears when the tab is closed; localStorage persists forever.
+    // Use sessionStorage to tell apart "navigating between pages" vs "fresh open".
+    const sessionActive = sessionStorage.getItem('musicSessionActive') === 'true';
+    sessionStorage.setItem('musicSessionActive', 'true'); // mark for subsequent pages
+
+    const storedPlaying = localStorage.getItem('musicPlaying');
+    // Only resume mid-song if we're already navigating within this session
+    const isPlaying = storedPlaying === 'true' && sessionActive;
+    // On a fresh open (new tab / closed & reopened), always start from 0
+    const savedTime = sessionActive ? parseFloat(localStorage.getItem('musicTime') || '0') : 0;
 
     const btn = document.createElement('button');
     btn.id = 'globalMusicBtn';
@@ -55,15 +64,36 @@
       }
     }
 
-    // Resume from saved position before playing
-    audio.addEventListener('canplay', () => {
+    // Seek to saved position THEN play — avoids playing from 0 before seeking
+    function resumeFromSaved() {
       if (savedTime > 0 && audio.duration && savedTime < audio.duration) {
         audio.currentTime = savedTime;
       }
-    }, { once: true });
+      audio.play().then(() => setPlaying(true)).catch(() => setPlaying(false));
+    }
 
     if (isPlaying) {
-      audio.play().then(() => setPlaying(true)).catch(() => setPlaying(false));
+      // readyState >= 3 means enough data is buffered (cached); act immediately
+      if (audio.readyState >= 3) {
+        resumeFromSaved();
+      } else {
+        audio.addEventListener('canplay', resumeFromSaved, { once: true });
+      }
+    }
+
+    // Fresh session on index.html: auto-start on first user interaction
+    const isIndex = window.location.pathname === '/' ||
+      window.location.pathname.endsWith('index.html') ||
+      window.location.pathname.endsWith('/');
+    if (!sessionActive && isIndex) {
+      const startOnce = (e) => {
+        if (e.target && e.target.closest('#globalMusicBtn')) return;
+        audio.play().then(() => setPlaying(true)).catch(() => { });
+        document.removeEventListener('click', startOnce);
+        document.removeEventListener('touchstart', startOnce);
+      };
+      document.addEventListener('click', startOnce);
+      document.addEventListener('touchstart', startOnce, { passive: true });
     }
 
     btn.addEventListener('click', () => {
@@ -71,11 +101,10 @@
         audio.pause();
         setPlaying(false);
       } else {
-        audio.play().then(() => setPlaying(true)).catch(() => {});
+        audio.play().then(() => setPlaying(true)).catch(() => { });
       }
     });
 
-    // Save time on page unload so the next page can resume
     window.addEventListener('pagehide', () => {
       localStorage.setItem('musicTime', audio.currentTime.toFixed(2));
     });
@@ -112,7 +141,7 @@
       { icon: '🏠', label: '首页', href: 'index.html' },
       { icon: '💌', label: '回忆', href: 'memories.html' },
       { icon: '📷', label: '相册', href: 'gallery.html' },
-      { icon: '💕', label: '关于她', href: 'about.html' },
+      { icon: '💕', label: '关于宝宝', href: 'about.html' },
       { icon: '🎵', label: '音乐', href: 'music.html' },
       { icon: '❤️', label: '结尾', href: 'ending.html' },
     ];
@@ -255,7 +284,7 @@
       heart.textContent = '♥';
       heart.style.left = (60 + Math.random() * 35) + 'vw';
       heart.style.fontSize = (12 + Math.random() * 10) + 'px';
-      heart.style.color = ['#FF6B9D','#FFB3CC','#FF4081'][Math.floor(Math.random()*3)];
+      heart.style.color = ['#FF6B9D', '#FFB3CC', '#FF4081'][Math.floor(Math.random() * 3)];
       const duration = 5 + Math.random() * 4;
       heart.style.animationDuration = duration + 's';
       document.body.appendChild(heart);

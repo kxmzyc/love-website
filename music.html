@@ -503,19 +503,27 @@
       }
     }
 
-    // Sync with global state from localStorage
-    const savedTime = parseFloat(localStorage.getItem('musicTime') || '0');
-    const wasPlaying = localStorage.getItem('musicPlaying') === 'true';
+    // Sync with global playback state from localStorage
+    const sessionActive = sessionStorage.getItem('musicSessionActive') === 'true';
+    const savedTime = sessionActive ? parseFloat(localStorage.getItem('musicTime') || '0') : 0;
+    const wasPlaying = localStorage.getItem('musicPlaying') === 'true' && sessionActive;
     audio.volume = volumeRange.value / 100;
 
-    audio.addEventListener('canplay', () => {
+    function syncFromSaved() {
       if (savedTime > 0 && audio.duration && savedTime < audio.duration) {
         audio.currentTime = savedTime;
       }
       if (wasPlaying) {
         audio.play().then(() => setPlaying(true)).catch(() => {});
       }
-    }, { once: true });
+    }
+
+    // readyState >= 3: already buffered (cached), act immediately
+    if (audio.readyState >= 3) {
+      syncFromSaved();
+    } else {
+      audio.addEventListener('canplay', syncFromSaved, { once: true });
+    }
 
     playBtn.addEventListener('click', togglePlay);
 
@@ -531,7 +539,6 @@
     });
 
     audio.addEventListener('ended', () => {
-      // loop manually to keep localStorage in sync
       audio.currentTime = 0;
       audio.play().catch(() => {});
     });
